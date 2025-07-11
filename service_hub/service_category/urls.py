@@ -1,7 +1,12 @@
 from django.contrib import admin
 from django.urls import path,include
 from rest_framework_simplejwt.views import (TokenObtainPairView, TokenRefreshView,)
-from service_category.views import CategoryListCreateView , CategoryDetailView,ServiceCreateView,ServiceDetailView,EmployeeRegisterView,EmployeeProfileView,EmployeeListView,EmployeeLoginView,BookingCreateView,AllBookingListView,BookingDetailView
+from rest_framework.routers import DefaultRouter
+from service_category.views import CategoryListCreateView , CategoryDetailView,ServiceCreateView,ServiceDetailView,EmployeeRegisterView,EmployeeProfileView,EmployeeListView,EmployeeLoginView,BookingViewSet,EmployeeLogoutView
+
+router = DefaultRouter()
+router.register(r'bookings', BookingViewSet, basename='booking')
+
 urlpatterns = [
  
 
@@ -13,14 +18,13 @@ urlpatterns = [
 
     path('employees/register/', EmployeeRegisterView.as_view(), name='employee-register'),
     path('employees/login/', EmployeeLoginView.as_view(), name='employee-login'),
+    path('employees/logout/', EmployeeLogoutView.as_view(), name='employee-logout'),
     path('employees/profile/', EmployeeProfileView.as_view(), name='employee-profile'),
     path('employees/', EmployeeListView.as_view(), name='employee-list'),
-
-    path('bookings/create/', BookingCreateView.as_view(), name='booking-create'),      
-    path('bookings/<int:pk>/', BookingDetailView.as_view(), name='booking-detail'),
-    path('bookings/', AllBookingListView.as_view(), name='booking-list'),                 
 
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 
 ]
+
+urlpatterns += router.urls

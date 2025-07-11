@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'service_category',
     'rest_framework',
     'rest_framework_simplejwt',
+    'rest_framework_simplejwt.token_blacklist',
 ]
 
 MIDDLEWARE = [
@@ -79,6 +80,8 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     )
 }
+
+
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
