@@ -40,9 +40,14 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'service',
     'user',
+    # 'notification',
     'rest_framework',
+    'import_export',
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
+    'webpush',
+    'notification.apps.NotificationConfig',
+    
 ]
 
 MIDDLEWARE = [
@@ -60,7 +65,7 @@ ROOT_URLCONF = 'service_management.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [ 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -135,4 +140,18 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'user.CustomUser'
+
+WEBPUSH_SETTINGS = {
+    "VAPID_PUBLIC_KEY": """-----BEGIN PUBLIC KEY-----
+MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEkSdVfSL/xHmybEsq2V3GNY9V+kMH
+u+dPEKZrh9oqDX+WTsQROk/B7dbOpvrYzlfhWabLEduCcml5yzsiLffMUg==
+-----END PUBLIC KEY-----""",
+
+    "VAPID_PRIVATE_KEY": """-----BEGIN PRIVATE KEY-----
+MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQgohBLd3GaD/w1BhbW
+jEGR4S9N1w1+f39rXsw+D+p9nhehRANCAASRJ1V9Iv/EebJsSyrZXcY1j1X6Qwe7
+508QpmuH2ioNf5ZOxBE6T8Ht1s6m+tjOV+FZpssR24JyaXnLOyIt98xS
+-----END PRIVATE KEY-----""",
+    "VAPID_ADMIN_EMAIL": "service@gmail.com", 
+}
  

@@ -5,8 +5,6 @@ from rest_framework.routers import DefaultRouter
 from service.views import CategoryView,CategoryDetailView,ServicesListCreateView,ServicesDetailView,EmployeeRegisterView,EmployeeProfileView,EmployeeLoginView,EmployeeListView,BookingViewSet,EmployeeLogoutView
 
 
-
-
 urlpatterns = [
  
  

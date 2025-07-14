@@ -28,11 +28,12 @@ class Employee(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='employee_profile')
     joining_date = models.DateField(auto_now_add=True)
     is_active = models.BooleanField(default=True)
+    is_available = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
  
     def __str__(self):
-        return self.name
+        return self.user.username
     
 class Booking(models.Model):
     STATUS_CHOICES = [

@@ -1,0 +1,87 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Push Notification Test</title>
+</head>
+<body>
+    <h1>Push Notification Demo</h1>
+    <button id="subscribe-btn">Subscribe for Notifications</button>
+    <p id="status"></p>
+
+    <script>
+        const subscribeBtn = document.getElementById('subscribe-btn');
+        const statusText = document.getElementById('status');
+
+        async function getVapidPublicKey() {
+            const response = await fetch('/notification/public-key/');
+            const data = await response.json();
+            return data.publicKey;
+        }
+
+        subscribeBtn.addEventListener('click', async function () {
+            if (!('serviceWorker' in navigator)) {
+                statusText.innerText = "❌ Service Workers not supported in this browser.";
+                return;
+            }
+
+            if (Notification.permission === "granted") {
+                statusText.innerText = "✅ Already subscribed.";
+                return;
+            }
+
+            if (Notification.permission === "denied") {
+                statusText.innerText = "❌ You blocked notifications. Enable them in browser settings.";
+                return;
+            }
+
+            const permission = await Notification.requestPermission();
+            if (permission !== "granted") {
+                statusText.innerText = "❌ Permission not granted.";
+                return;
+            }
+
+            try {
+                const vapidPublicKey = await getVapidPublicKey();
+                const registration = await navigator.serviceWorker.register('/service-worker.js');
+                console.log("✅ Service Worker registered!");
+
+                const subscription = await registration.pushManager.subscribe({
+                    userVisibleOnly: true,
+                    applicationServerKey: urlBase64ToUint8Array(vapidPublicKey)
+                });
+
+                console.log("Subscription:", JSON.stringify(subscription));
+
+                const response = await fetch('/notification/save-subscription/', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(subscription)
+                });
+
+                if (response.ok) {
+                    statusText.innerText = "✅ Subscribed successfully!";
+                } else {
+                    statusText.innerText = "❌ Failed to subscribe.";
+                }
+            } catch (err) {
+                console.error("Error during subscription:", err);
+                statusText.innerText = "⚠️ Subscription error. Check console.";
+            }
+        });
+
+        // Helper to convert base64 string to Uint8Array
+        function urlBase64ToUint8Array(base64String) {
+            const padding = '='.repeat((4 - base64String.length % 4) % 4);
+            const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
+            const rawData = window.atob(base64);
+            const outputArray = new Uint8Array(rawData.length);
+            for (let i = 0; i < rawData.length; ++i) {
+                outputArray[i] = rawData.charCodeAt(i);
+            }
+            return outputArray;
+        }
+    </script>
+</body>
+</html>

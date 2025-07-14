@@ -35,11 +35,11 @@ class LoginView(generics.GenericAPIView):
         user = authenticate(username=username, password=password)
  
         if user is not None:
-            if user.is_staff or user.is_superuser:
+            if user.is_staff and not user.is_superuser:
                 return Response(
-                    {'detail': 'Employees are not allowed to login here.'},
-                    status=status.HTTP_403_FORBIDDEN
-                )
+            {'detail': 'Employees are not allowed to login here.'},
+        status=status.HTTP_403_FORBIDDEN
+    )
 
             refresh = RefreshToken.for_user(user)
             user_serializer = UserProfileSerializer(user)
