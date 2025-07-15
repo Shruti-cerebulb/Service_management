@@ -28,6 +28,7 @@ class Employee(models.Model):
     services = models.ManyToManyField(Services, related_name='employees', blank=True)
     joining_date = models.DateField(auto_now_add=True)
     is_active = models.BooleanField(default=True)
+    is_available = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

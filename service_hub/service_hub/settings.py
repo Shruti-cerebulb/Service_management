@@ -40,9 +40,13 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'service',
     'service_category',
+    # 'notification',
+     'webpush',
+    'import_export',
     'rest_framework',
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
+    'notification.apps.NotificationConfig',
 ]
 
 MIDDLEWARE = [
@@ -139,4 +143,18 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'service.CustomUser'
 
+# webpush settings
+WEBPUSH_SETTINGS = {
+    "VAPID_PUBLIC_KEY": """-----BEGIN PUBLIC KEY-----
+MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE2WQ+BzNjAIrf+FFh9Rwexv8TgCx+
+Fu8Ro39vDGGhM2PoOx+DPCAonGWcSIbSfkiUWOnY+Oh0uzNcLm+Qa+GhaA==
+-----END PUBLIC KEY-----""",
+
+    "VAPID_PRIVATE_KEY": """-----BEGIN PRIVATE KEY-----
+MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQggLHsNGWj5m8zegGb
+zTkcXE9GNukVWw5GNN0Hty0heaGhRANCAATZZD4HM2MAit/4UWH1HB7G/xOALH4W
+7xGjf28MYaEzY+g7H4M8ICicZZxIhtJ+SJRY6dj46HS7M1wub5Br4aFo
+-----END PRIVATE KEY-----""",
+    "VAPID_ADMIN_EMAIL": "service@gmail.com", 
+}
 
