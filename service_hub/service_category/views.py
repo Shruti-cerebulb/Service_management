@@ -12,80 +12,27 @@ from django.shortcuts import get_object_or_404
 
 
 
-class CategoryListCreateView(APIView):
+class CategoryListCreateView(generics.ListCreateAPIView):
     permission_classes = [IsAdminUser] 
-
-    def get(self,request):
-        categories = Category.objects.all()
-        serializer = ServiceCategorySerializer(categories, many = True)
-        return Response(serializer.data)
-    
-    def post(self,request):
-        serializer= ServiceCategorySerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response({"message": "Created!","data":serializer.data},
-                  status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)          
-    
-class CategoryDetailView(APIView):
+    queryset = Category.objects.all()
+    serializer_class = ServiceCategorySerializer
+ 
+class CategoryDetailView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAdminUser] 
+    queryset = Category.objects.all()
+    serializer_class = ServiceCategorySerializer
 
-    def get(self,request,pk):
-        category_obj = get_object_or_404(Category,pk=pk)
-        serializer = ServiceCategorySerializer(category_obj)
-        return Response(serializer.data)
-    
-    def put(self,request,pk):
-        category_obj = get_object_or_404(Category,pk=pk)
-        serializer = ServiceCategorySerializer(category_obj, data=request.data,partial=True)
-        if serializer.is_valid():
-            serializer.save()
-            return Response({"message":"Updated!","data":serializer.data})
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
-    def delete(self,request,pk):
-        category_obj = get_object_or_404(Category,pk=pk)
-        category_obj.delete()
-        return Response({"message": "Deleted!"}, status=status.HTTP_204_NO_CONTENT)
         
-class ServiceCreateView(APIView):
-    permission_classes = [IsAdminUser]
+class ServiceCreateView(generics.ListCreateAPIView):
+    # permission_classes = [IsAdminUser]
+    queryset = Services.objects.all()
+    serializer_class = ServiceSerializer
 
-
-    def get(self,request):
-        service = Services.objects.all()
-        serializer = ServiceSerializer(service, many=True)
-        return Response(serializer.data)
-    
-    def post(self,request):
-        serializer = ServiceSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response({"message": "Created!", "data": serializer.data}, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         
-class ServiceDetailView(APIView):
+class ServiceDetailView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAdminUser]
-
-
-    def get(self,request,pk):
-        service = get_object_or_404(Services,pk=pk)
-        serializer = ServiceSerializer(service)
-        return Response(serializer.data)
-    
-    def put(self,request,pk):
-        service = get_object_or_404(Services,pk=pk)
-        serializer = ServiceSerializer(service,data=request.data,partial=True)
-        if serializer.is_valid():
-            serializer.save()
-            return Response({"message":"Services Updated!","data":serializer.data})
-        return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
-
-    def delete(self,request,pk):
-        service = get_object_or_404(Services,pk=pk)
-        service.delete()
-        return Response({'message':'Services Deleted!'},status=status.HTTP_204_NO_CONTENT)
+    queryset = Services.objects.all()
+    serializer_class = ServiceSerializer
     
 class EmployeeRegisterView(generics.CreateAPIView):
     queryset = Employee.objects.all()

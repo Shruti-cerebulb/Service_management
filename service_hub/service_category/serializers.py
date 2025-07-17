@@ -3,6 +3,8 @@ from .models import Category , Services , Employee , Booking
 from django.contrib.auth import get_user_model
 from django.contrib.auth.password_validation import validate_password
 from service.models import CustomUser
+from django.core.mail import send_mail
+
 
 
 User = get_user_model()
@@ -60,6 +62,13 @@ class EmployeeRegisterSerializer(serializers.ModelSerializer):
         services = validated_data.get('services')
         if services:
             employee.services.set(services)
+        
+        subject = "Welcome to Service Hub"
+        message = f"Hi {user.username},\n\nThank you for registering with ServiceHub. We're happy to have you as a Employee!"
+        from_email = None
+        recipient_list = [user.email]
+
+        send_mail(subject,message,from_email,recipient_list,fail_silently=False)
 
         return employee
     

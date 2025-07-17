@@ -157,4 +157,11 @@ zTkcXE9GNukVWw5GNN0Hty0heaGhRANCAATZZD4HM2MAit/4UWH1HB7G/xOALH4W
 -----END PRIVATE KEY-----""",
     "VAPID_ADMIN_EMAIL": "service@gmail.com", 
 }
-
+# email settings
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'singhgunjan7532@gmail.com'
+EMAIL_HOST_PASSWORD = 'xrym ljwa crbk nmxa'
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER 

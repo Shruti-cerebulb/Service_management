@@ -22,17 +22,22 @@ class LoginView(generics.GenericAPIView):
     serializer_class = LoginSerializer
 
     def post(self, request, *args, **kwargs): 
-        username = request.data.get('username')
-        password = request.data.get('password')
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        username = serializer.validated_data['username']
+        password = serializer.validated_data['password']
+
         user = authenticate(username=username, password=password)
 
         if user is not None:
+            # Restrict employees who are staff but not superusers
             if user.is_staff and not user.is_superuser:
                 return Response(
                     {'detail': 'Employees are not allowed to login here.'},
                     status=status.HTTP_403_FORBIDDEN
                 )
- 
+
             refresh = RefreshToken.for_user(user)
             user_serializer = UserProfileSerializer(user)
             return Response({
@@ -40,8 +45,8 @@ class LoginView(generics.GenericAPIView):
                 'access': str(refresh.access_token),
                 'user': user_serializer.data
             }, status=status.HTTP_200_OK)
-        else:
-            return Response({'detail': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
+
+        return Response({'detail': 'Invalid username or password.'}, status=status.HTTP_401_UNAUTHORIZED)
         
 class LogoutView(generics.GenericAPIView):
     permission_classes = [permissions.IsAuthenticated]
